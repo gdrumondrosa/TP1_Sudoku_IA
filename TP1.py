@@ -108,26 +108,21 @@ def ass(initial_Node):
     return -1
 
 def gbfs(initial_Node):
-    node = initial_Node
-    frontier = [node]
-    explored = []
-    iterations = 0
-
     while(1):
-        if len(frontier) == 0:
-            return -1
-        node = frontier.pop(0)
-        if node.solution() == True:
-            return [iterations, node.matrix]
-        explored.append(node.matrix)
-        iterations += 1
-        for i in node.get_less_actions()[1]:
-            new_matrix = copy.deepcopy(node.matrix)
-            new_matrix[node.get_less_actions()[0][0]][node.get_less_actions()[0][1]] = i
-            child = Node(new_matrix)
-            node.children.append(child)
-            if child.matrix not in explored or child not in frontier:
-                frontier.append(child)
+        frontier = [initial_Node]
+        iterations = 0
+        while len(frontier) != 0:
+            node = frontier.pop()
+            iterations += 1
+            if node.solution() == True:
+                return [iterations, node.matrix]
+            if node not in frontier:
+                for i in node.get_less_actions()[1]:
+                    new_matrix = copy.deepcopy(node.matrix)
+                    new_matrix[node.get_less_actions()[0][0]][node.get_less_actions()[0][1]] = i
+                    child = Node(new_matrix)
+                    node.children.append(child)
+                    frontier.append(child)
 
 #lendo entrada
 algorithm = sys.argv[1]
