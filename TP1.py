@@ -24,31 +24,31 @@ def bfs(initial_Node):
             new_matrix[node.get_zero()[0]][node.get_zero()[1]] = i
             child = Node(new_matrix)
             node.children.append(child)
-            if child.matrix not in explored or child not in frontier:
-                if child.solution() == True:
-                    return [iterations, child.matrix]
-                frontier.append(child)
+            if child.solution() == True:
+                return [iterations, child.matrix]
+            frontier.append(child)
 
 def ids(initial_Node):
     l = 0
+    depth = 0
+    iterations = 0
+    next_frontier = [initial_Node]
     while(1):
-        depth = 0
-        frontier = [initial_Node]
-        iterations = 0
+        frontier = next_frontier
+        next_frontier = []
         while len(frontier) != 0:
             node = frontier.pop()
             iterations += 1
             if node.solution() == True:
                 return [iterations, node.matrix]
             if depth <= l:
-                if node not in frontier:
-                    for i in node.get_actions():
-                        new_matrix = copy.deepcopy(node.matrix)
-                        new_matrix[node.get_zero()[0]][node.get_zero()[1]] = i
-                        child = Node(new_matrix)
-                        node.children.append(child)
-                        frontier.append(child)
-            depth += 1
+                for i in node.get_actions():
+                    new_matrix = copy.deepcopy(node.matrix)
+                    new_matrix[node.get_zero()[0]][node.get_zero()[1]] = i
+                    child = Node(new_matrix)
+                    node.children.append(child)
+                    next_frontier.append(child)
+        depth += 1
         l += 1
 
 def ucs(initial_Node):
@@ -70,8 +70,7 @@ def ucs(initial_Node):
             new_matrix[node.get_zero()[0]][node.get_zero()[1]] = i
             child = Node(new_matrix)
             node.children.append(child)
-            if child.matrix not in explored or child not in frontier:
-                frontier.append(child)
+            frontier.append(child)
 
 #busca com informação
 def ass(initial_Node):
@@ -101,10 +100,8 @@ def ass(initial_Node):
             new_matrix[current.get_zero()[0]][current.get_zero()[1]] = i
             child = Node(new_matrix)
             current.children.append(child)
-            if child not in closed:
-                if child not in open:
-                    child.get_dist_to_goal()
-                    open.append(child)
+            child.get_dist_to_goal()
+            open.append(child)
     return -1
 
 def gbfs(initial_Node):
@@ -116,13 +113,12 @@ def gbfs(initial_Node):
             iterations += 1
             if node.solution() == True:
                 return [iterations, node.matrix]
-            if node not in frontier:
-                for i in node.get_less_actions()[1]:
-                    new_matrix = copy.deepcopy(node.matrix)
-                    new_matrix[node.get_less_actions()[0][0]][node.get_less_actions()[0][1]] = i
-                    child = Node(new_matrix)
-                    node.children.append(child)
-                    frontier.append(child)
+            for i in node.get_less_actions()[1]:
+                new_matrix = copy.deepcopy(node.matrix)
+                new_matrix[node.get_less_actions()[0][0]][node.get_less_actions()[0][1]] = i
+                child = Node(new_matrix)
+                node.children.append(child)
+                frontier.append(child)
 
 #lendo entrada
 algorithm = sys.argv[1]
